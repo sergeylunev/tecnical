@@ -1,0 +1,1 @@
+By default, questions file need to be stored in `var/questions` directory.
