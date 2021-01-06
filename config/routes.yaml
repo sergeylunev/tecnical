@@ -1,0 +1,13 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+
+questions_list:
+  path: /questions
+  controller: App\Controller\QuestionController::list
+  methods: GET
+
+question_add:
+  path: /questions
+  controller: App\Controller\QuestionController::add
+  methods: POST
