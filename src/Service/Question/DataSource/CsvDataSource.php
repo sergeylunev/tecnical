@@ -57,6 +57,29 @@ class CsvDataSource implements DataSourceInterface
 
     public function add(QuestionDTO $question): QuestionDTO
     {
-        // TODO: Implement add() method.
+        $fileName = $this->dataFolderPath . DIRECTORY_SEPARATOR . self::FILE_NAME;
+
+        if (!file_exists($fileName)) {
+            throw new \Exception("{$fileName} dont exists.");
+        }
+
+        $f = fopen($fileName, 'a');
+
+        $csvArray = [
+            $question->getText(),
+            $question->getCreatedAtFormatted(),
+        ];
+
+        foreach ($question->getChoices() as $choice) {
+            $csvArray[] = $choice->getText();
+        }
+
+        try {
+            fputcsv($f, $csvArray);
+        } finally {
+            fclose($f);
+        }
+
+        return $question;
     }
 }

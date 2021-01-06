@@ -8,8 +8,10 @@ class QuestionDTO
 {
     /** @Type("string") */
     private string $text;
+
     /** @Type("DateTimeImmutable<'Y-m-d H:i:s'>") */
     private \DateTimeImmutable $createdAt;
+
     /**
      * @Type("array<App\Service\Question\ChoiceDTO>")
      * @var ChoiceDTO[]
@@ -41,11 +43,36 @@ class QuestionDTO
         return $this->createdAt;
     }
 
+    public function getCreatedAtFormatted(): string
+    {
+        return $this->createdAt->format('Y-m-d H:i:s');
+    }
+
     /**
      * @return ChoiceDTO[]
      */
     public function getChoices(): array
     {
         return $this->choices;
+    }
+
+    public static function createFromJson(string $json): self
+    {
+        $jsonData = json_decode($json, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new \Exception(json_last_error_msg());
+        }
+
+        $choices = [];
+        foreach ($jsonData['choices'] as $choice) {
+            $choices[] = new ChoiceDTO($choice['text']);
+        }
+
+        return new self(
+            $jsonData['text'],
+            new \DateTimeImmutable($jsonData['createdAt']),
+            $choices
+        );
     }
 }

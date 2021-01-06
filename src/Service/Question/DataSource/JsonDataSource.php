@@ -59,6 +59,33 @@ class JsonDataSource implements DataSourceInterface
 
     public function add(QuestionDTO $question): QuestionDTO
     {
-        // TODO: Implement add() method.
+        $fileName = $this->dataFolderPath . DIRECTORY_SEPARATOR . self::FILE_NAME;
+
+        if (!file_exists($fileName)) {
+            throw new \Exception("{$fileName} dont exists.");
+        }
+
+        $dataString = file_get_contents($fileName);
+
+        if (!$dataString) {
+            throw new \Exception("Can't read data from {$fileName}");
+        }
+
+        $data = json_decode($dataString, true);
+
+        $newQuestionArray = [
+            'text' => $question->getText(),
+            'createdAt' => $question->getCreatedAtFormatted(),
+        ];
+
+        foreach ($question->getChoices() as $choice) {
+            $newQuestionArray['choices'][] = ['text' => $choice->getText()];
+        }
+
+        array_push($data, $newQuestionArray);
+
+        file_put_contents($fileName, json_encode($data));
+
+        return $question;
     }
 }

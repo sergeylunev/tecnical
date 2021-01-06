@@ -40,5 +40,5 @@ services:
 
     App\Service\QuestionService:
         arguments:
-            $dataSource: '@App\Service\Question\DataSource\CsvDataSource'
+            $dataSource: '@App\Service\Question\DataSource\JsonDataSource'
             $questionTranslator: '@App\Service\Question\QuestionTranslator'

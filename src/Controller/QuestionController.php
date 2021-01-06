@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\Question\QuestionDTO;
 use App\Service\QuestionService;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,8 +25,17 @@ class QuestionController
         return new JsonResponse($json, Response::HTTP_OK, [], true);
     }
 
-    public function add(): JsonResponse
+    public function add(
+        QuestionService $questionService,
+        SerializerInterface $serializer,
+        Request $request
+    ): JsonResponse
     {
+        $content = $request->getContent();
+        $question = $questionService->addQuestion(QuestionDTO::createFromJson($content));
 
+        $json = $serializer->serialize($question, 'json');
+
+        return new JsonResponse($json, Response::HTTP_OK, [], true);
     }
 }

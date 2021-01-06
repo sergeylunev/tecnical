@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Service\Question\DataSourceInterface;
+use App\Service\Question\QuestionDTO;
 use App\Service\Question\QuestionTranslator;
 
 class QuestionService
@@ -28,5 +29,12 @@ class QuestionService
         $questions = $this->questionTranslator->translate($questions, $lang);
 
         return $questions;
+    }
+
+    public function addQuestion(QuestionDTO $question): QuestionDTO
+    {
+        $question = $this->dataSource->add($question);
+
+        return $question;
     }
 }
